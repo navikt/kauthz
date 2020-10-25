@@ -7,9 +7,9 @@ import io.kauthz.specification.Rule
 import io.kauthz.specification.Rule.Companion.rule
 import io.kauthz.specification.RuleEvaluation.Companion.no
 import io.kauthz.specification.RuleEvaluation.Companion.yes
-import io.kauthz.specification.demo.AccessContext
+import io.kauthz.specification.demo.PolicyContext
 
-val `tilgang til opplysninger om seg selv`: Policy<AccessContext> =
+val `tilgang til opplysninger om seg selv`: Policy<PolicyContext> =
     policy {
         id = "ekstern_tilgang_opplysninger_om_seg_selv"
         description = "ekstern_tilgang_opplysninger_om_seg_selv"
@@ -23,7 +23,7 @@ val `tilgang til opplysninger om seg selv`: Policy<AccessContext> =
         }
     }
 
-val `subject er lik person`: Rule<AccessContext> =
+val `subject er lik person`: Rule<PolicyContext> =
     rule {
         id = "seg_selv"
         description = "opplysninger om seg selv"

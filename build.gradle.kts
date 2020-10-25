@@ -3,6 +3,7 @@ val logbackVersion = "1.2.3"
 val junitJupiterVersion = "5.7.0"
 val kotlinVersion = "1.4.10"
 val kotestVersion = "4.3.0"
+val jacksonVersion = "2.11.+"
 
 plugins {
     kotlin("jvm") version "1.4.0"
@@ -29,6 +30,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
+    testImplementation( "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion") // for kotest framework
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion") // for kotest core jvm assertions

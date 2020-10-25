@@ -1,7 +1,7 @@
 package io.kauthz.specification
 
 data class PolicyEvaluation(
-    val result: PolicyResult,
+    val decision: PolicyDecision,
     val reason: String,
     val description: String = "",
     val id: String = "",
@@ -10,21 +10,21 @@ data class PolicyEvaluation(
 ) {
 
     infix fun and(other: PolicyEvaluation) = PolicyEvaluation(
-        result = result and other.result,
+        decision = decision and other.decision,
         reason = "($reason AND ${other.reason})",
         operator = Operator.AND,
         children = this.specOrChildren() + other.specOrChildren()
     )
 
     infix fun or(other: PolicyEvaluation) = PolicyEvaluation(
-        result = result or other.result,
+        decision = decision or other.decision,
         reason = "($reason OR ${other.reason})",
         operator = Operator.OR,
         children = this.specOrChildren() + other.specOrChildren()
     )
 
     operator fun not() = PolicyEvaluation(
-        result = result.not(),
+        decision = decision.not(),
         reason = "(NOT $reason)",
         operator = Operator.NOT,
         children = listOf(this)
@@ -34,13 +34,13 @@ data class PolicyEvaluation(
         if (id.isBlank() && children.isNotEmpty()) children else listOf(this)
 
     companion object {
-        fun permit(reason: String = "") = PolicyEvaluation(PolicyResult.PERMIT, reason)
-        fun deny(reason: String) = PolicyEvaluation(PolicyResult.DENY, reason)
+        fun permit(reason: String = "") = PolicyEvaluation(PolicyDecision.PERMIT, reason)
+        fun deny(reason: String) = PolicyEvaluation(PolicyDecision.DENY, reason)
 
-        fun notapplicable(reason: String) = PolicyEvaluation(PolicyResult.NOT_APPLICABLE, reason)
+        fun notapplicable(reason: String) = PolicyEvaluation(PolicyDecision.NOT_APPLICABLE, reason)
 
         fun evaluate(id: String, description: String, eval: PolicyEvaluation) = eval.copy(id = id, description = description)
     }
 }
 
-infix fun PolicyEvaluation.`is`(result: PolicyResult): Boolean = this.result == result
+infix fun PolicyEvaluation.`is`(decision: PolicyDecision): Boolean = this.decision == decision

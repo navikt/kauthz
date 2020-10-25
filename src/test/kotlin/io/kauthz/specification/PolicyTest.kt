@@ -19,32 +19,56 @@ internal class PolicyTest {
     @Test
     fun `permitOrFail function should return receiver or throw exception if not permit`() {
 
-        `string should be yolo`.permitOrFail("yolo") {
+        `string should be yolo`.requirePermitOrFail("yolo") {
             "my receiver"
         } shouldBe "my receiver"
 
         shouldThrow<PolicyEvaluationException> {
-            `string should be yolo`.permitOrFail("not yolo obviously") {
+            `string should be yolo`.requirePermitOrFail("not yolo obviously") {
                 "whatevs"
             }
         }
     }
 
     @Test
-    fun `ifPermit should execute lambda and return receiver if result is Permit`(){
-        `string should be yolo`.permit("yolo") {
+    fun `permit should execute lambda and return receiver if result is Permit`() {
+        `string should be yolo`.requirePermit("yolo") {
             "my receiver"
         } shouldBe "my receiver"
     }
 
     @Test
-    fun `ifPermit should not execute lambda and return PolicyEvaluation if result is NOT Permit`(){
-        `string should be yolo`.permit("not yolo") {
+    fun `permit should not execute lambda and return PolicyEvaluation if result is NOT Permit`() {
+        `string should be yolo`.requirePermit("not yolo") {
             "my receiver"
         } should beInstanceOf<PolicyEvaluation>()
 
-        (`string should be yolo`.permit("not yolo") {
+        (`string should be yolo`.requirePermit("not yolo") {
             "my receiver"
-        } as PolicyEvaluation).result shouldBe PolicyResult.DENY
+        } as PolicyEvaluation).decision shouldBe PolicyDecision.DENY
+    }
+
+    @Test
+    fun `authorize should execute block and return receiver`() {
+        authorize("yolo", `string should be yolo`) {
+            if (it.decision == PolicyDecision.PERMIT) {
+                "my receiver"
+            } else {
+                null
+            }
+        } shouldBe "my receiver"
+    }
+
+    @Test
+    fun `authorize should execute block and throw exception in block`() {
+        shouldThrow<RuntimeException> {
+            authorize("not yolo", `string should be yolo`) {
+                if (it.decision == PolicyDecision.PERMIT) {
+                    "my receiver"
+                } else {
+                    throw RuntimeException(it.reason)
+                }
+            }
+        }
     }
 }

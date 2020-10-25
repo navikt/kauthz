@@ -65,21 +65,30 @@ infix fun <T> T.can(policy: Policy<T>): PolicyEvaluation = policy.evaluate(this)
 infix fun <T> T.cannot(policy: Policy<T>): PolicyEvaluation = !policy.evaluate(this)
 fun <T> not(spec: Policy<T>) = spec.not()
 
-inline fun <T, R> Policy<T>.permitOrFail(ctx: T, block: () -> R): R =
+inline fun <T, R> Policy<T>.requirePermitOrFail(ctx: T, block: () -> R): R =
     this.evaluate(ctx).let {
-        when (it.result) {
-            PolicyResult.PERMIT -> block.invoke()
+        when (it.decision) {
+            PolicyDecision.PERMIT -> block.invoke()
             else -> throw PolicyEvaluationException(it)
         }
     }
 
-inline fun <T, R> Policy<T>.permit(ctx: T, block: () -> R): Any =
+inline fun <T, R> Policy<T>.requirePermit(ctx: T, block: () -> R): Any =
     this.evaluate(ctx).let {
-        when (it.result) {
-            PolicyResult.PERMIT -> block.invoke()
+        when (it.decision) {
+            PolicyDecision.PERMIT -> block.invoke()
             else -> it
         }
     } ?: PolicyEvaluation.deny("could not evaluate policy")
+
+inline fun <T, R> requirePermitOrFail(ctx: T, policy: Policy<T>, block: () -> R): R = policy.requirePermitOrFail(ctx, block)
+
+inline fun <T, R> requirePermit(ctx: T, policy: Policy<T>, block: () -> R) = policy.requirePermit(ctx, block)
+
+inline fun <T, R> authorize(ctx: T, policy: Policy<T>, block: (PolicyEvaluation) -> R?): R? =
+    policy.evaluate(ctx).let{
+        block.invoke(it)
+    }
 
 data class PolicyEvaluationException(
     val evaluation: PolicyEvaluation

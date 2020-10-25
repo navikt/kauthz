@@ -1,6 +1,6 @@
 package io.kauthz.specification.demo
 
-data class AccessContext(
+data class PolicyContext(
     val subject: Subject,
     val person: Person
 )
