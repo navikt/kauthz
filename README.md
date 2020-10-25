@@ -1,3 +1,3 @@
-# kauthz 
+# NAPE - Not A Policy Enginge  
 
-Policy based authorization in Kotlin
+Specfication for policy based authorization in Kotlin
