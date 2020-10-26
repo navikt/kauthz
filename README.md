@@ -1,3 +1,3 @@
-# NAPE - Not A Policy Enginge  
+# NAPE - Not A Policy Engine
 
-Specfication for policy based authorization in Kotlin
+Specification for policy based authorization in Kotlin

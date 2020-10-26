@@ -1,6 +1,5 @@
-package io.kauthz.specification
+package no.nav.security.nape.core.specification
 
-// TODO check results from operators
 enum class Result {
     YES {
         override infix fun and(other: Result): Result = other

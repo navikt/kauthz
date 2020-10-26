@@ -1,6 +1,6 @@
-package io.kauthz.specification
+package no.nav.security.nape.core.specification
 
-import io.kauthz.specification.RuleEvaluation.Companion.no
+import no.nav.security.nape.core.specification.RuleEvaluation.Companion.no
 
 data class Rule<T>(
     val id: String = "",

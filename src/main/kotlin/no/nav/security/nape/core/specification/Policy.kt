@@ -1,4 +1,4 @@
-package io.kauthz.specification
+package no.nav.security.nape.core.specification
 
 data class Policy<T>(
     val id: String = "",

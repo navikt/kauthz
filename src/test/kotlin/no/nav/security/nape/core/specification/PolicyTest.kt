@@ -1,6 +1,6 @@
-package io.kauthz.specification
+package no.nav.security.nape.core.specification
 
-import io.kauthz.specification.Policy.Companion.policy
+import no.nav.security.nape.core.specification.Policy.Companion.policy
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
