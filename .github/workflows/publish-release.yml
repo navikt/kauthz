@@ -34,19 +34,12 @@ jobs:
             ${{ runner.os }}-gradle-wrapper-
       - name: Publish artifact
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GPG_KEYS: ${{ secrets.GPG_KEYS }}
-          GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
         # The GITHUB_REF tag comes in the format 'refs/tags/xxx'.
         # So if we split on '/' and take the 3rd value, we can get the release name.
         run: |
-          export GPG_TTY=$(tty) && echo "$GPG_KEYS" | gpg --fast-import --batch
           NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
           REPO_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
           echo "Releasing new version ${NEW_VERSION} of ${REPO_NAME}"
-          ./gradlew -Pversion=${NEW_VERSION} publish closeAndReleaseRepository -Dorg.gradle.internal.publish.checksums.insecure=true --info
+          ./gradlew -Pversion=${NEW_VERSION} publish
 

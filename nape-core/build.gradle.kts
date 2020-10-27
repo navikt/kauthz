@@ -1,5 +1,3 @@
-import java.time.Duration
-
 val kotlinLoggingVersion = "2.0.3"
 val logbackVersion = "1.2.3"
 val junitJupiterVersion = "5.7.0"
@@ -15,10 +13,8 @@ plugins {
     id("com.github.ben-manes.versions") version "0.33.0"
     id("se.patrikerdes.use-latest-versions") version "0.2.15"
     id("net.researchgate.release") version "2.8.1"
-    id("de.marcphilipp.nexus-publish") version "0.4.0"
     `java-library`
     `maven-publish`
-    signing
 }
 
 java {
@@ -45,13 +41,6 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion") // for kotest core jvm assertions
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
-}
-
-nexusPublishing {
-    clientTimeout.set(Duration.ofMinutes(2))
-    repositories {
-        sonatype()
-    }
 }
 
 publishing {
@@ -106,15 +95,6 @@ publishing {
     }
 }
 
-ext["signing.gnupg.keyName"] = System.getenv("GPG_KEY_NAME")
-ext["signing.gnupg.passphrase"] = System.getenv("GPG_PASSPHRASE")
-ext["signing.gnupg.executable"] = "gpg"
-
-signing {
-    useGpgCmd()
-    sign(publishing.publications["mavenJava"])
-}
-
 tasks.javadoc {
     if (JavaVersion.current().isJava9Compatible) {
         (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
@@ -138,13 +118,5 @@ tasks {
 
     withType<Wrapper> {
         gradleVersion = "6.7"
-    }
-
-    "publish" {
-        dependsOn("initializeSonatypeStagingRepository")
-    }
-
-    "publishToSonatype" {
-        dependsOn("publish")
     }
 }
